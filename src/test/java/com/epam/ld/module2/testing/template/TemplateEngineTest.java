@@ -103,4 +103,28 @@ public class TemplateEngineTest {
         String message = templateEngine.generateMessage(template, consoleClientCreator);
         assertEquals(message, StringTemplate);
     }
+
+    @Test
+    public void givenTemplate_whenConsoleClientAndPassedAttrs_thenFillTheTemplateByProperValues() {
+        Template template = mock(Template.class);
+        ConsoleClientCreator consoleClientCreator = mock(ConsoleClientCreator.class);
+        Map<String, String> attributesMapFromConsole = new HashMap<>();
+        attributesMapFromConsole.put("#{subject}", "Testing topic");
+        attributesMapFromConsole.put("#{name}", "Testing name");
+        attributesMapFromConsole.put("#{txt}", "Text");
+
+        String expectedOutput = """
+            Subject: Testing topic
+                                
+            Hello Testing name
+            Text: Text
+                                
+            Best Regards
+            """;
+
+        when(template.getBasicMessageTemplate()).thenReturn(StringTemplate);
+        when(consoleClientCreator.getParams()).thenReturn(attributesMapFromConsole);
+        String message = templateEngine.generateMessage(template, consoleClientCreator);
+        assertEquals(expectedOutput, message);
+    }
 }
