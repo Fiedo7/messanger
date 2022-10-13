@@ -74,25 +74,20 @@ public class TemplateEngineTest {
     }
 
     @Test
-    public void givenTemplate_whenConsoleClientAndPassedAllMatchingAttributes_ThenThrowException() {
-        Template template = mock(Template.class);
-        ConsoleClientCreator consoleClientCreator = mock(ConsoleClientCreator.class);
-        Map<String, String> attributesMapFromConsole = new HashMap<>();
-        attributesMapFromConsole.put("#{subject}", "Testing topic");
-        attributesMapFromConsole.put("#{name}", "Testing name");
-        attributesMapFromConsole.put("#{txt}", "Text");
-
-        when(template.getBasicMessageTemplate()).thenReturn(StringTemplate);
-        when(consoleClientCreator.getParams()).thenReturn(attributesMapFromConsole);
-        String message = templateEngine.generateMessage(template, consoleClientCreator);
-        assertEquals(message, StringTemplate);
-    }
-
-    @Test
     public void givenTemplate_whenConsoleClientAndPassedMoreAttributesAllMatching_thenReturnTemplate() {
         Template template = mock(Template.class);
         ConsoleClientCreator consoleClientCreator = mock(ConsoleClientCreator.class);
         Map<String, String> attributesMapFromConsole = new HashMap<>();
+
+        String expectedOutput = """
+            Subject: Testing topic
+                                
+            Hello Testing name
+            Text: Text
+                                
+            Best Regards
+            """;
+
         attributesMapFromConsole.put("#{subject}", "Testing topic");
         attributesMapFromConsole.put("#{name}", "Testing name");
         attributesMapFromConsole.put("#{txt}", "Text");
@@ -101,7 +96,7 @@ public class TemplateEngineTest {
         when(template.getBasicMessageTemplate()).thenReturn(StringTemplate);
         when(consoleClientCreator.getParams()).thenReturn(attributesMapFromConsole);
         String message = templateEngine.generateMessage(template, consoleClientCreator);
-        assertEquals(message, StringTemplate);
+        assertEquals(message, expectedOutput);
     }
 
     @Test
