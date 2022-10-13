@@ -1,5 +1,7 @@
 package com.epam.ld.module2.testing;
 
+import com.epam.ld.module2.testing.client.Client;
+
 /**
  * Mail server class.
  */
@@ -7,10 +9,9 @@ public class MailServer {
 
     /**
      * Send notification.
-     *
-     * @param addresses  the addresses
+     * @param client client
      * @param messageContent the message content
      */
-    public void send(String addresses, String messageContent) {
+    public void send(Client client, String messageContent) {
     }
 }
