@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  * The type Template engine.
  */
 public class TemplateEngine {
+
     /**
      * Generate message string.
      *
@@ -26,7 +27,7 @@ public class TemplateEngine {
                 || !attributesFromTemplate.stream().allMatch(attributesFromClient::containsKey)) {
             throw new IllegalStateException("Not all attributes have been passed from client");
         }
-        return template.getBasicMessageTemplate();
+        return replaceAttributeByValue(template, attributesFromClient);
     }
 
     private List<String> getAttributesFromTemplate(Template template) {
@@ -38,5 +39,19 @@ public class TemplateEngine {
             variables.add(matcher.group());
         }
         return variables;
+    }
+
+    private String replaceAttributeByValue(Template template, Map<String, String> attributesMap) {
+        String output = template.getBasicMessageTemplate();
+        Pattern p = Pattern.compile("^#\\{(.*)}$");
+        for (String key : attributesMap.keySet()) {
+            Matcher matcher = p.matcher(key);
+            if (matcher.find()){
+                String tokenKey = matcher.group(1);
+                String pattern = "#\\{" + tokenKey + "}";
+                output = output.replaceAll(pattern, attributesMap.get(key));
+            }
+        }
+        return output;
     }
 }
